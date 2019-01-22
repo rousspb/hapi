@@ -1,0 +1,20 @@
+{
+  "name": "hapi-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "rousspb",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-hapi": "^2.3.1",
+    "graphql": "^14.1.1",
+    "hapi": "^18.0.0",
+    "mongoose": "^5.4.5"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0"
+  }
+}
