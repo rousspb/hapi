@@ -10,6 +10,10 @@ const routes = [
     {
       method: 'GET',
       path: '/api/v1/paintings',
+      config: {
+        description: 'Get all paitings',
+        tags: ['api', 'v1', 'painting']
+      },
       handler: (req, reply) => {
         return Painting.find();
       }
@@ -17,12 +21,16 @@ const routes = [
     {
       method: 'POST',
       path: '/api/v1/paintings',
+      config: {
+        description: 'Get a specific painting by ID',
+        tags: ['api', 'v1', 'painting']
+      },
       handler: (req, reply) => {
-        const { name, url, techniques } = req.payload;
+        const { name, url, technique } = req.payload;
         const painting = new Painting({
           name,
           url,
-          techniques
+          technique
         });
         return painting.save();
       }

@@ -1,5 +1,9 @@
 const Hapi = require('hapi');
 const mongoose =  require('mongoose');
+const Inert = require('inert');
+const HapiSwagger = require('hapi-swagger');
+const Vision = require('vision');
+const Package = require('Package');
 const routes = require('./routes');
 const { graphqlHapi, graphiqlHapi } = require('apollo-server-hapi');
 const schema = require('./graphql/schema');
@@ -15,36 +19,53 @@ mongoose.connection.once('open', () => {
 });
 
 const init = async () => {
-  // await server.register({
-  //   plugin: graphiqlHapi,
-  //   options: {
-  //     path: '/graphiql',
-  //     graphiqlOptions: {
-  //       endpointURL: 'graphql'
-  //     },
-  //     route: {
-  //       cors: true
-  //     }
-  //   }
-  // });
-
-  // await server.x({
-  //   plugin: graphqlHapi,
-  //   options: {
-  //     path: '/graphql',
-  //     graphiqlOptions: {
-  //       schema
-  //     },
-  //     route: {
-  //       cors: true
-  //     }
-  //   }
-  // });
+  await server.register([
+    {
+      plugin: graphqlHapi,
+      options: {
+        path: '/graphql',
+        graphqlOptions: {
+          schema
+        },
+        route: {
+          cors: true,
+        },
+      },
+  },
+  {
+    plugin: graphiqlHapi,
+    register : graphiqlHapi,
+    options: {
+        path: '/graphiql',
+        graphiqlOptions: {
+            endpointURL: 'graphql'
+        },
+        route: {
+            cors: true
+        },
+    }
+  },
+  Inert,
+  Vision,
+  {
+    plugin: HapiSwagger,
+    options: {
+      info: {
+        title: 'Paintings API Documentation',
+        version: Package.version
+      }
+    }
+  }
+])
   routes.forEach(route => {
     console.log(`attaching ${route.path}`);
     server.route(route);
   });
-  await server.start();
+  try {
+    await server.start();
+  } catch(err) {
+    console.log(`Error starting server ${err.message}`);
+  }
   console.log(`Server starting at ${server.info.uri}`);
 }
 
