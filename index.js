@@ -1,7 +1,8 @@
 const Hapi = require('hapi');
 const mongoose =  require('mongoose');
-
 const routes = require('./routes');
+const { graphqlHapi, graphiqlHapi } = require('apollo-server-hapi');
+const schema = require('./graphql/schema');
 
 const server = Hapi.server({
   port: 4000,
@@ -14,6 +15,31 @@ mongoose.connection.once('open', () => {
 });
 
 const init = async () => {
+  // await server.register({
+  //   plugin: graphiqlHapi,
+  //   options: {
+  //     path: '/graphiql',
+  //     graphiqlOptions: {
+  //       endpointURL: 'graphql'
+  //     },
+  //     route: {
+  //       cors: true
+  //     }
+  //   }
+  // });
+
+  // await server.x({
+  //   plugin: graphqlHapi,
+  //   options: {
+  //     path: '/graphql',
+  //     graphiqlOptions: {
+  //       schema
+  //     },
+  //     route: {
+  //       cors: true
+  //     }
+  //   }
+  // });
   routes.forEach(route => {
     console.log(`attaching ${route.path}`);
     server.route(route);
